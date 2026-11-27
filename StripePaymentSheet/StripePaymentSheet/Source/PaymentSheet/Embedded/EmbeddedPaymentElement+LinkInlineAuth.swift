@@ -125,6 +125,12 @@ extension EmbeddedPaymentElement {
     /// Whether selecting the Link row opens the Link wallet, rather than only selecting Link.
     /// - Parameter linkWasSelected: Whether the Link row was already selected, i.e. the customer tapped it again or tapped "Change".
     func linkRowSelectionOpensWallet(linkWasSelected: Bool) -> Bool {
+        // The Link-only row always opens Link, which asks the customer to verify again first if their session expired.
+        if showsOnlyLink,
+           LinkAccountContext.shared.account?.isRegistered == true,
+           deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
+            return linkWasSelected
+        }
         guard linkRowOpensWallet else { return false }
         // Selecting Link again keeps the payment details it showed. Tapping it while selected changes them.
         if linkPaymentDetails != nil {
@@ -196,30 +202,49 @@ extension EmbeddedPaymentElement {
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
-        ) { [weak self] confirmOption, _, _ in
+        ) { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
             guard let self else { return }
-            if confirmOption != nil {
-                self.analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
-            } else {
-                self.analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletClosed()
-            }
-            self.linkWalletDidFinish(with: confirmOption, revertsSelectionOnClose: revertsSelectionOnClose)
+            self.linkWalletDidFinish(
+                with: confirmOption,
+                shouldReturnToPaymentSheet: shouldReturnToPaymentSheet,
+                revertsSelectionOnClose: revertsSelectionOnClose
+            )
         }
     }
 
-    func linkWalletDidFinish(with confirmOption: PaymentSheet.LinkConfirmOption?, revertsSelectionOnClose: Bool) {
+    /// - Parameter shouldReturnToPaymentSheet: Whether the customer chose to pay another way, rather than closing the wallet.
+    func linkWalletDidFinish(
+        with confirmOption: PaymentSheet.LinkConfirmOption?,
+        shouldReturnToPaymentSheet: Bool = false,
+        revertsSelectionOnClose: Bool
+    ) {
         guard let confirmOption else {
+            if shouldReturnToPaymentSheet, showsOnlyLink {
+                analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPaidAnotherWay()
+                payAnotherWay()
+                return
+            }
+            analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletClosed()
             if revertsSelectionOnClose, embeddedPaymentMethodsView.selectedRowButton?.type == .link {
                 restoreSelectionBeforeLink()
             }
             return
         }
+        analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
         // The wallet showed its mandate and records its bank data-sharing consent itself.
         preselectedLinkPaymentDetailsID = nil
         selectLink(with: confirmOption)
     }
 
-    /// Selects the Link row to pay with `confirmOption`.
+    /// Shows every payment method again, with none selected, so the customer can pick something other than Link.
+    private func payAnotherWay() {
+        linkConfirmOption = nil
+        preselectedLinkPaymentDetailsID = nil
+        remakeEmbeddedPaymentMethodsView(selection: nil, linkOnlyPaymentDetails: nil)
+        informDelegateIfPaymentOptionUpdated()
+    }
+
+    /// Selects the Link row to pay with `confirmOption`. With payment details, Link becomes the only row.
     private func selectLink(with confirmOption: PaymentSheet.LinkConfirmOption) {
         // `.wallet` means the wallet couldn't hand back payment details, so Link pays through the wallet at confirm time.
         if case .wallet = confirmOption {
@@ -230,6 +255,10 @@ extension EmbeddedPaymentElement {
         guard embeddedPaymentMethodsView.selectedRowButton?.type == .link || embeddedPaymentMethodsView.selectLinkRow() else {
             linkConfirmOption = nil
             return
+        }
+        if showsOnlyLink || linkPaymentDetails != nil {
+            // Shows the payment details on the Link-only row. Without any, e.g. for `.wallet`, the list shows every payment method instead.
+            remakeEmbeddedPaymentMethodsView(selection: .link, linkOnlyPaymentDetails: linkPaymentDetails)
         }
         updateChangeButtonAndSublabelState(for: .link)
         persistDefaultPaymentMethodSelection(.link)
@@ -335,6 +364,7 @@ extension EmbeddedPaymentElement {
               LinkAccountContext.shared.account === linkAccount,
               linkAccount.sessionState == .verified,
               embeddedPaymentMethodsView.selectedRowButton?.type == selectionBeforePreselecting else {
+            collapseLinkInlineVerification()
             return
         }
         switch result {
@@ -344,7 +374,10 @@ extension EmbeddedPaymentElement {
                 analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselected(paymentDetailsType: paymentDetails.type.rawValue)
             }
             selectLink(with: confirmOption)
+            // Usually the Link-only row replaced the list, card and all, but not when Link pays through the wallet.
+            collapseLinkInlineVerification()
         case .failure(let reason):
+            collapseLinkInlineVerification()
             analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselectionFellBack(reason: reason.rawValue)
             switch configuration.formSheetAction {
             case .continue:
@@ -399,8 +432,7 @@ extension EmbeddedPaymentElement: EmbeddedLinkInlineAuthControllerHost {
     }
 
     func linkInlineAuthDidCollapse() {
-        embeddedPaymentMethodsView.collapseLinkInlineVerification(animated: true)
-        embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: false)
+        collapseLinkInlineVerification()
         informDelegateIfPaymentOptionUpdated()
     }
 
@@ -409,6 +441,17 @@ extension EmbeddedPaymentElement: EmbeddedLinkInlineAuthControllerHost {
         embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
         informDelegateIfPaymentOptionUpdated()
         guard fromCard else { return }
+        // The card stays, loading, until preselection replaces it with the Link-only row, rather than collapsing into the Link row first.
         preselectDefaultLinkPaymentMethod()
+        if linkPreselectionTask == nil {
+            collapseLinkInlineVerification()
+        }
+    }
+
+    /// Replaces the card with the Link row. Does nothing once the list no longer shows the card, e.g. after it became the Link-only row.
+    func collapseLinkInlineVerification() {
+        // Updated first so the collapse animates to the Link row's final height.
+        embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: false)
+        embeddedPaymentMethodsView.collapseLinkInlineVerification(animated: true)
     }
 }

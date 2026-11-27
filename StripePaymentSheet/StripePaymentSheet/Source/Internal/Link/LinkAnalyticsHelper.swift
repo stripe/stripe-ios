@@ -166,6 +166,11 @@ struct LinkAnalyticsHelper {
         analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthWalletClosed, checkoutSessionID: checkoutSessionID)
     }
 
+    /// The customer left the Link-only list through "Pay another way" in the Link wallet, which shows the other payment methods again.
+    func logEmbeddedInlineAuthPaidAnotherWay() {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthPaidAnotherWay, checkoutSessionID: checkoutSessionID)
+    }
+
     /// After verifying, the Link row was selected with the customer's default Link payment method instead of opening the wallet.
     func logEmbeddedInlineAuthPreselected(paymentDetailsType: String) {
         analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthPreselected, checkoutSessionID: checkoutSessionID, params: ["payment_details_type": paymentDetailsType])

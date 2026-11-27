@@ -154,7 +154,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(host.collapses, 1)
     }
 
-    func testEnteringTheRightCodeCollapsesAndReportsVerification() async throws {
+    func testEnteringTheRightCodeReportsVerificationWithoutCollapsing() async throws {
         // Given a card whose code was sent
         let account = LinkAuthAccountStub()
         let (controller, _) = makeController(account: account)
@@ -167,10 +167,10 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         card.onCodeEntered?("123456")
         await settle()
 
-        // Then verification finishes and the host shows the Link row again, knowing it came from the card
+        // Then verification finishes, and the host, knowing it came from the card, decides what replaces the card
         XCTAssertEqual(account.confirms, [.sms])
         XCTAssertEqual(controller.phase, .finished)
-        XCTAssertEqual(host.collapses, 1)
+        XCTAssertEqual(host.collapses, 0)
         XCTAssertEqual(host.verifications, [true])
     }
 
@@ -706,12 +706,14 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
         let paymentDetails = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
         element.linkWalletDidFinish(with: makeConfirmOption(account: linkAccount, paymentDetails: paymentDetails), revertsSelectionOnClose: false)
 
-        // Then Link is selected with that card and a "Change" button, and the selection is reported once
+        // Then Link is the only row, selected with that card, which the row shows, and the selection is reported once
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
         let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
         XCTAssertEqual(linkRow.type, .link)
         XCTAssertTrue(linkRow.isDisplayingAccessoryView)
-        XCTAssertEqual(element.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, paymentDetails.linkPaymentDetailsFormattedString)
-        XCTAssertEqual(sublabelText(of: linkRow), paymentDetails.linkPaymentDetailsFormattedString)
+        XCTAssertEqual(linkRow.label.text, paymentDetails.paymentSheetLabel)
+        XCTAssertEqual(sublabelText(of: linkRow), paymentDetails.paymentSheetSublabel)
         XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, paymentDetails.stripeID)
         XCTAssertEqual(element.paymentOption?.paymentMethodType, "link")
         XCTAssertEqual(delegate.paymentOptionUpdates, 1)
@@ -722,38 +724,17 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
         // Given Link is selected with a card picked in the Link wallet
         let (element, linkAccount) = makeElementVerifiedFromTheCard()
         element.linkWalletDidFinish(with: makeConfirmOption(account: linkAccount), revertsSelectionOnClose: false)
-        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
 
         // When the payment option is cleared
         element.clearPaymentOption()
 
-        // Then the Link row goes back to showing the customer's email
+        // Then the rebuilt list's Link row goes back to showing the customer's email
         XCTAssertNil(element.linkConfirmOption)
         XCTAssertNil(element.paymentOption)
+        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.rowButtons.first)
+        XCTAssertEqual(linkRow.type, .link)
         XCTAssertFalse(linkRow.isDisplayingAccessoryView)
         XCTAssertEqual(sublabelText(of: linkRow), linkAccount.email)
-    }
-
-    func testCancelingAnotherRowsFormRestoresLinkWithThePickedDetails() throws {
-        // Given Link is selected with a card picked in the Link wallet
-        let (element, linkAccount) = makeElementVerifiedFromTheCard()
-        element.presentingViewController = UIViewController()
-        let paymentDetails = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
-        element.linkWalletDidFinish(with: makeConfirmOption(account: linkAccount, paymentDetails: paymentDetails), revertsSelectionOnClose: false)
-        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
-
-        // When the customer opens the card form, then cancels it
-        let cardRow = try XCTUnwrap(element.embeddedPaymentMethodsView.rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card)) }))
-        element.embeddedPaymentMethodsView.didTap(rowButton: cardRow)
-        XCTAssertFalse(linkRow.isDisplayingAccessoryView)
-        let form = try XCTUnwrap(element.selectedFormViewController)
-        element.embeddedFormViewControllerDidCancel(form)
-
-        // Then Link is selected again with the same card and "Change" button
-        XCTAssertTrue(element.embeddedPaymentMethodsView.selectedRowButton === linkRow)
-        XCTAssertTrue(linkRow.isDisplayingAccessoryView)
-        XCTAssertEqual(sublabelText(of: linkRow), paymentDetails.linkPaymentDetailsFormattedString)
-        XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, paymentDetails.stripeID)
     }
 
     func testAnUpdateKeepsThePickedLinkDetails() throws {
@@ -766,12 +747,13 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
         // When an update reloads the element
         element.applyLoadResult(makeLoadResult(isLinkEnabled: true), confirmationChallenge: nil, configuration: configuration)
 
-        // Then the rebuilt list still shows Link selected with the same card, first in the list
+        // Then the rebuilt list still shows only Link, selected with the same card
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
         let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
         XCTAssertEqual(linkRow.type, .link)
-        XCTAssertTrue(element.embeddedPaymentMethodsView.rowButtons.first === linkRow)
         XCTAssertTrue(linkRow.isDisplayingAccessoryView)
-        XCTAssertEqual(sublabelText(of: linkRow), paymentDetails.linkPaymentDetailsFormattedString)
+        XCTAssertEqual(linkRow.label.text, paymentDetails.paymentSheetLabel)
         XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, paymentDetails.stripeID)
     }
 

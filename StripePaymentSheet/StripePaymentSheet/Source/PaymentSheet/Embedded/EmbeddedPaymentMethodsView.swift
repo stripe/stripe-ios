@@ -132,6 +132,8 @@ class EmbeddedPaymentMethodsView: UIView {
     /// The separators around the expanded Link row, hidden while it shows since it has its own border.
     private(set) var linkInlineVerificationHiddenSeparators: [UIView] = []
     private(set) var rowButtons: [RowButton]
+    /// Whether the Link row, showing the Link payment details it pays with, is the only row.
+    let showsOnlyLink: Bool
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
     /// Keeps track of whether we're showing a change button/sublabel on the selected row
     /// Hacky - ideally we have a RowButtonViewModel type of object that keeps track of this state.
@@ -149,6 +151,7 @@ class EmbeddedPaymentMethodsView: UIView {
         linkBrandProvider: (() -> LinkBrand)? = nil,
         placesLinkFirst: Bool = false,
         linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
+        linkOnlyPaymentDetails: ConsumerPaymentDetails? = nil,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
@@ -172,6 +175,9 @@ class EmbeddedPaymentMethodsView: UIView {
         self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
         self.delegate = delegate
         self.rowButtons = []
+        // After inline verification selects Link payment details, Link is the only row until the customer pays another way.
+        let showsOnlyLink = shouldShowLink && linkOnlyPaymentDetails != nil
+        self.showsOnlyLink = showsOnlyLink
         super.init(frame: .zero)
 
         let makeLinkRowButton = { [weak self] in
@@ -186,12 +192,24 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         }
 
+        if showsOnlyLink, let linkOnlyPaymentDetails {
+            rowButtons.append(RowButton.makeForLinkPaymentDetails(
+                linkOnlyPaymentDetails,
+                appearance: appearance,
+                linkBrand: linkBrand,
+                isEmbedded: true,
+                accessoryView: makeLinkOnlyAccessoryButton(linkBrand: linkBrand)
+            ) { [weak self] rowButton in
+                self?.didTap(rowButton: rowButton)
+            })
+        }
+
         // Link leads for returning Link customers who can verify inline, and keeps its place afterwards.
-        if shouldShowLink, placesLinkFirst {
+        if shouldShowLink, placesLinkFirst, !showsOnlyLink {
             rowButtons.append(makeLinkRowButton())
         }
 
-        if let savedPaymentMethod {
+        if let savedPaymentMethod, !showsOnlyLink {
             let savedPaymentMethodButton = makeSavedPaymentMethodButton(
                 savedPaymentMethod: savedPaymentMethod,
                 savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType
@@ -201,7 +219,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         // Add card before Apple Pay and Link if present and before any other LPMs
-        if paymentMethodTypes.contains(.stripe(.card)) {
+        if paymentMethodTypes.contains(.stripe(.card)), !showsOnlyLink {
             let cardRowButton = makePaymentMethodRowButton(
                 paymentMethodType: .stripe(.card),
                 savedPaymentMethods: savedPaymentMethods
@@ -209,7 +227,7 @@ class EmbeddedPaymentMethodsView: UIView {
             rowButtons.append(cardRowButton)
         }
 
-        if shouldShowApplePay {
+        if shouldShowApplePay, !showsOnlyLink {
             let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
@@ -218,12 +236,12 @@ class EmbeddedPaymentMethodsView: UIView {
             rowButtons.append(applePayRowButton)
         }
 
-        if shouldShowLink, !placesLinkFirst {
+        if shouldShowLink, !placesLinkFirst, !showsOnlyLink {
             rowButtons.append(makeLinkRowButton())
         }
 
         // Add all non-card PMs (card is added above)
-        for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) {
+        for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) && !showsOnlyLink {
             let rowButton = makePaymentMethodRowButton(
                 paymentMethodType: paymentMethodType,
                 savedPaymentMethods: savedPaymentMethods
@@ -233,10 +251,15 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Add the row buttons to our stack view
         rowButtons.forEach { rowButton in
-            stackView.addArrangedSubview(rowButton)
+            if showsOnlyLink, appearance.embeddedPaymentElement.row.style != .floatingButton {
+                // Like the inline verification card it replaces, the Link-only row sits in its own container instead of between separators.
+                stackView.addArrangedSubview(LinkOnlyRowContainerView(rowButton: rowButton, appearance: appearance))
+            } else {
+                stackView.addArrangedSubview(rowButton)
+            }
         }
 
-        if appearance.embeddedPaymentElement.row.style != .floatingButton {
+        if appearance.embeddedPaymentElement.row.style != .floatingButton, !showsOnlyLink {
             stackView.addSeparators(color: appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder,
                                     thickness: appearance.embeddedPaymentElement.row.flat.separatorThickness,
                                     inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.row.style.defaultInsets,
@@ -265,7 +288,8 @@ class EmbeddedPaymentMethodsView: UIView {
         // If we have a row button that matches the initial selection, make it selected
         if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
             rowButtonMatchingInitialSelection.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: rowButtonMatchingInitialSelection.type) == true)
-            if let initialSelectedRowChangeButtonState {
+            // The Link-only row already shows its payment details.
+            if let initialSelectedRowChangeButtonState, !showsOnlyLink {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
                     rowButtonMatchingInitialSelection.addChangeButton(animated: false)
@@ -306,8 +330,8 @@ class EmbeddedPaymentMethodsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        // Only log this once
-        if !didLogRenderLPMs {
+        // Only log this once, and not for the Link-only list, which isn't the list of payment methods the customer can pick from.
+        if !didLogRenderLPMs, !showsOnlyLink {
             logInitialDisplayedPaymentMethods()
             didLogRenderLPMs = true
         }
@@ -384,26 +408,66 @@ class EmbeddedPaymentMethodsView: UIView {
         let linkRowButton = linkRowButton
         let separators = linkInlineVerificationHiddenSeparators
         linkInlineVerificationHiddenSeparators = []
-        let updates = {
-            container.setHiddenIfNecessary(true)
-            container.alpha = 0
+        defer { UIAccessibility.post(notification: .layoutChanged, argument: linkRowButton) }
+
+        guard animated, window != nil, !UIAccessibility.isReduceMotionEnabled, let linkRowButton else {
+            container.removeFromSuperview()
             separators.forEach { $0.setHiddenIfNecessary(false) }
             linkRowButton?.setHiddenIfNecessary(false)
-            linkRowButton?.alpha = 1
+            return
+        }
+
+        // Shrinking the card inside the stack view squashes its content over the rows below, so the card leaves the
+        // stack view and is clipped from its top edge down to the Link row, fading out over the Link row as it fades in.
+        layoutIfNeeded()
+        let containerFrame = container.frame
+        let linkRowIndex = stackView.arrangedSubviews.firstIndex(of: linkRowButton) ?? 0
+        let separatorBefore = separators.first { (stackView.arrangedSubviews.firstIndex(of: $0) ?? 0) < linkRowIndex }
+        let separatorAfter = separators.first { (stackView.arrangedSubviews.firstIndex(of: $0) ?? 0) > linkRowIndex }
+        let clipView = UIView(frame: container.convert(container.bounds, to: self))
+        clipView.clipsToBounds = true
+        clipView.isUserInteractionEnabled = false
+        container.removeFromSuperview()
+        container.translatesAutoresizingMaskIntoConstraints = true
+        container.autoresizingMask = []
+        container.frame = clipView.bounds
+        clipView.addSubview(container)
+        addSubview(clipView)
+
+        separators.forEach { $0.setHiddenIfNecessary(false) }
+        linkRowButton.setHiddenIfNecessary(false)
+        linkRowButton.alpha = 0
+        // Hidden views keep stale frames, so start them where they'd be now instead of animating from there.
+        UIView.performWithoutAnimation {
+            let width = stackView.bounds.width
+            var y = containerFrame.minY
+            if let separatorBefore {
+                separatorBefore.frame = CGRect(x: 0, y: y, width: width, height: separatorBefore.intrinsicHeight(width: width))
+                separatorBefore.layoutIfNeeded()
+                y = separatorBefore.frame.maxY
+            }
+            linkRowButton.frame = CGRect(x: 0, y: y, width: width, height: linkRowButton.intrinsicHeight(width: width))
+            linkRowButton.layoutIfNeeded()
+            if let separatorAfter {
+                separatorAfter.frame = CGRect(x: 0, y: containerFrame.maxY, width: width, height: separatorAfter.intrinsicHeight(width: width))
+                separatorAfter.layoutIfNeeded()
+            }
+        }
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
             self.setNeedsLayout()
             self.layoutIfNeeded()
+            let linkRowFrame = linkRowButton.convert(linkRowButton.bounds, to: self)
+            clipView.frame.size.height = max(0, linkRowFrame.maxY - clipView.frame.minY)
+        } completion: { _ in
+            clipView.removeFromSuperview()
         }
-        let completion: (Bool) -> Void = { _ in
-            container.removeFromSuperview()
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
+            clipView.alpha = 0
         }
-        if animated, window != nil, !UIAccessibility.isReduceMotionEnabled {
-            linkRowButton?.alpha = 0
-            UIView.animate(withDuration: 0.25, animations: updates, completion: completion)
-        } else {
-            updates()
-            completion(true)
+        UIView.animate(withDuration: 0.2, delay: 0.1, options: .curveEaseIn) {
+            linkRowButton.alpha = 1
         }
-        UIAccessibility.post(notification: .layoutChanged, argument: linkRowButton)
     }
 
     /// Displays an error below the payment method rows, or clears it when `error` is nil.
@@ -459,7 +523,8 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
-        guard let linkRowButton else {
+        // The Link-only row shows its payment details instead of the account.
+        guard let linkRowButton, !showsOnlyLink else {
             return
         }
 
@@ -672,6 +737,18 @@ class EmbeddedPaymentMethodsView: UIView {
         return accessoryButton
     }
 
+    /// The Link logo and a chevron on the Link-only row. Tapping it changes the Link payment details, like tapping the row.
+    private func makeLinkOnlyAccessoryButton(linkBrand: LinkBrand) -> RowButton.RightAccessoryButton {
+        RowButton.RightAccessoryButton(
+            accessoryType: .link(brand: linkBrand),
+            appearance: appearance,
+            didTap: { [weak self] in
+                guard let self, let linkRowButton else { return }
+                didTap(rowButton: linkRowButton)
+            }
+        )
+    }
+
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
         // We always add a hidden accessory button ("Change >") so we can show/hide it easily
         return RowButton.makeForPaymentMethodType(
@@ -739,5 +816,41 @@ extension RowButton {
         if shouldClearSublabel {
             setSublabel(text: nil)
         }
+    }
+}
+
+/// Borders the Link-only row in flat styles, the same way as the inline verification card. Floating rows draw their own.
+private final class LinkOnlyRowContainerView: UIView {
+    private let appearance: PaymentSheet.Appearance
+
+    init(rowButton: RowButton, appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
+        super.init(frame: .zero)
+        layer.borderWidth = max(appearance.borderWidth, 1)
+        layer.borderColor = appearance.colors.componentBorder.cgColor
+        applyCornerRadiusOrConfiguration(for: appearance)
+        // Lines the row's icon and accessory up with the card's 16pt padding. Radio rows have no trailing padding of their own.
+        let trailingInset: CGFloat = appearance.embeddedPaymentElement.row.style == .flatWithRadio ? 16 : 4
+        addAndPinSubview(rowButton, insets: .insets(leading: 4, trailing: trailingInset))
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        // `CGColor` doesn't follow light and dark mode on its own.
+        layer.borderColor = appearance.colors.componentBorder.cgColor
+    }
+}
+
+private extension UIView {
+    func intrinsicHeight(width: CGFloat) -> CGFloat {
+        systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
     }
 }

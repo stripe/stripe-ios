@@ -46,11 +46,14 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         // When their Link payment details load
         await preselect(element, linkAccount: linkAccount, from: [bankAccount, defaultCard])
 
-        // Then Link is selected with the default card, shown on the row with a "Change" button
+        // Then Link is the only row, selected with the default card, which the row shows next to the Link logo
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
         let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
         XCTAssertEqual(linkRow.type, .link)
         XCTAssertTrue(linkRow.isDisplayingAccessoryView)
-        XCTAssertEqual(sublabelText(of: linkRow), defaultCard.linkPaymentDetailsFormattedString)
+        XCTAssertEqual(linkRow.label.text, defaultCard.paymentSheetLabel)
+        XCTAssertEqual(sublabelText(of: linkRow), defaultCard.paymentSheetSublabel)
         XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, defaultCard.stripeID)
         XCTAssertEqual(element.paymentOption?.paymentMethodType, "link")
         XCTAssertNil(element.paymentOption?.mandateText)
@@ -183,29 +186,172 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         XCTAssertNil(element.preselectedLinkPaymentDetailsID)
     }
 
-    func testReselectingLinkKeepsThePreselectedPaymentDetails() async throws {
+    func testTappingTheLinkOnlyRowOpensTheWallet() async throws {
         // Given Link is preselected with the customer's default card
+        let (element, linkAccount) = makeVerifiedElement()
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+
+        // Then tapping the Link-only row, which is already selected, opens the wallet to change the card
+        XCTAssertTrue(element.linkRowSelectionOpensWallet(linkWasSelected: true))
+    }
+
+    func testTappingTheLinkOnlyRowOpensTheWalletAfterTheSessionExpires() async throws {
+        // Given Link is the only row, preselected with the customer's default card
+        let (element, linkAccount) = makeVerifiedElement()
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+
+        // When their Link session expires, so they need to verify again
+        linkAccount.applyAuthResponse(.init(consumerSession: LinkAuthStubs.session()))
+        XCTAssertEqual(linkAccount.sessionState, .requiresVerification)
+
+        // Then tapping the row still opens Link, which asks them to verify before showing the wallet
+        XCTAssertTrue(element.linkRowSelectionOpensWallet(linkWasSelected: true))
+        // ...while Link pays through the wallet until they pick something again
+        XCTAssertNil(element.linkPaymentDetails)
+    }
+
+    func testPayingAnotherWayShowsEveryPaymentMethod() async throws {
+        // Given Link is the only row, preselected with the customer's default card
         let (element, linkAccount) = makeVerifiedElement(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)])
-        element.presentingViewController = UIViewController()
+        let delegate = EmbeddedPreselectionDelegateSpy()
+        element.delegate = delegate
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+        XCTAssertEqual(delegate.paymentOptionUpdates, 1)
+
+        // When the customer taps "Pay another way" in the Link wallet
+        element.linkWalletDidFinish(with: nil, shouldReturnToPaymentSheet: true, revertsSelectionOnClose: false)
+
+        // Then every payment method shows again, with none selected
+        XCTAssertFalse(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link, .new(paymentMethodType: .stripe(.card)), .new(paymentMethodType: .stripe(.cashApp))])
+        XCTAssertNil(element.embeddedPaymentMethodsView.selectedRowButton)
+        XCTAssertNil(element.linkConfirmOption)
+        XCTAssertNil(element.paymentOption)
+        XCTAssertEqual(delegate.paymentOptionUpdates, 2)
+        // ...and the Link row shows the customer's email again
+        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.rowButtons.first)
+        XCTAssertEqual(sublabelText(of: linkRow), linkAccount.email)
+        // ...and it's logged as paying another way, not closing the wallet
+        XCTAssertTrue(analyticsClient.events.contains { $0.event == .linkEmbeddedInlineAuthPaidAnotherWay })
+        XCTAssertFalse(analyticsClient.events.contains { $0.event == .linkEmbeddedInlineAuthWalletClosed })
+    }
+
+    func testClosingTheWalletKeepsOnlyLink() async throws {
+        // Given Link is the only row, preselected with the customer's default card
+        let (element, linkAccount) = makeVerifiedElement()
         let defaultCard = paymentMethod(LinkStubs.PaymentMethodIndices.card)
         await preselect(element, linkAccount: linkAccount, from: [defaultCard])
-        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
 
-        // When the customer picks Cash App, then taps the Link row again
-        let cashAppRow = try XCTUnwrap(element.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.cashApp)) })
-        element.embeddedPaymentMethodsView.didTap(rowButton: cashAppRow)
-        XCTAssertEqual(element.embeddedPaymentMethodsView.selectedRowButton?.type, cashAppRow.type)
-        XCTAssertFalse(linkRow.isDisplayingAccessoryView)
-        element.embeddedPaymentMethodsView.didTap(rowButton: linkRow)
+        // When the customer opens the wallet and closes it
+        element.linkWalletDidFinish(with: nil, shouldReturnToPaymentSheet: false, revertsSelectionOnClose: false)
 
-        // Then Link is selected again with the same card and "Change" button, without opening the wallet
-        XCTAssertTrue(element.embeddedPaymentMethodsView.selectedRowButton === linkRow)
-        XCTAssertTrue(linkRow.isDisplayingAccessoryView)
-        XCTAssertEqual(sublabelText(of: linkRow), defaultCard.linkPaymentDetailsFormattedString)
+        // Then Link is still the only row, selected with the same card
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
+        XCTAssertEqual(element.embeddedPaymentMethodsView.selectedRowButton?.type, .link)
         XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, defaultCard.stripeID)
-        XCTAssertNil(element.presentingViewController?.presentedViewController)
-        // ...while tapping the selected Link row, or its "Change" button, opens the wallet
-        XCTAssertTrue(element.linkRowSelectionOpensWallet(linkWasSelected: true))
+    }
+
+    func testPickingOtherPaymentDetailsKeepsOnlyLink() async throws {
+        // Given Link is the only row, preselected with the customer's default card
+        let (element, linkAccount) = makeVerifiedElement()
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+
+        // When the customer picks their bank account in the wallet
+        let bankAccount = paymentMethod(LinkStubs.PaymentMethodIndices.bankAccount)
+        element.linkWalletDidFinish(with: confirmOption(bankAccount, linkAccount: linkAccount), revertsSelectionOnClose: false)
+
+        // Then Link is still the only row, now showing the bank account
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
+        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
+        XCTAssertEqual(linkRow.label.text, bankAccount.paymentSheetLabel)
+        XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, bankAccount.stripeID)
+    }
+
+    func testPickingInTheWalletAfterFallingBackShowsOnlyLink() {
+        // Given a customer whose default couldn't be preselected, so the wallet opened
+        let (element, linkAccount) = makeVerifiedElement()
+        XCTAssertFalse(element.showsOnlyLink)
+
+        // When they pick a card in it
+        let card = paymentMethod(LinkStubs.PaymentMethodIndices.card)
+        element.linkWalletDidFinish(with: confirmOption(card, linkAccount: linkAccount), revertsSelectionOnClose: false)
+
+        // Then Link is the only row, selected with that card
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
+        XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, card.stripeID)
+    }
+
+    func testPickingLinkFromTheFullListShowsOnlyLinkAgain() async throws {
+        // Given a customer who paid another way after Link was preselected
+        let (element, linkAccount) = makeVerifiedElement()
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+        element.linkWalletDidFinish(with: nil, shouldReturnToPaymentSheet: true, revertsSelectionOnClose: false)
+
+        // When they tap Link again and pick a card in the wallet
+        let card = paymentMethod(LinkStubs.PaymentMethodIndices.card)
+        element.linkWalletDidFinish(with: confirmOption(card, linkAccount: linkAccount), revertsSelectionOnClose: true)
+
+        // Then Link is the only row again, selected with that card and showing it
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
+        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
+        XCTAssertEqual(linkRow.label.text, card.paymentSheetLabel)
+        XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, card.stripeID)
+    }
+
+    func testPickingWithoutPaymentDetailsShowsEveryPaymentMethod() async throws {
+        // Given Link is the only row, preselected with the customer's default card
+        let (element, linkAccount) = makeVerifiedElement()
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+
+        // When the wallet can't hand back payment details, so Link pays through it
+        element.linkWalletDidFinish(with: .wallet(brand: .link), revertsSelectionOnClose: false)
+
+        // Then every payment method shows, with Link still selected
+        XCTAssertFalse(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link, .new(paymentMethodType: .stripe(.card))])
+        XCTAssertEqual(element.embeddedPaymentMethodsView.selectedRowButton?.type, .link)
+        XCTAssertNil(element.linkConfirmOption)
+    }
+
+    func testClearingThePaymentOptionShowsEveryPaymentMethod() async throws {
+        // Given Link is the only row, preselected with the customer's default card
+        let (element, linkAccount) = makeVerifiedElement()
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+
+        // When the merchant clears the payment option
+        element.clearPaymentOption()
+
+        // Then every payment method shows, with none selected
+        XCTAssertFalse(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link, .new(paymentMethodType: .stripe(.card))])
+        XCTAssertNil(element.embeddedPaymentMethodsView.selectedRowButton)
+        XCTAssertNil(element.paymentOption)
+    }
+
+    func testAnUpdateKeepsOnlyLinkWhileLinkIsShown() async throws {
+        // Given Link is the only row, preselected with the customer's default card
+        let configuration = makeConfiguration()
+        let (element, linkAccount) = makeVerifiedElement(configuration: configuration)
+        let defaultCard = paymentMethod(LinkStubs.PaymentMethodIndices.card)
+        await preselect(element, linkAccount: linkAccount, from: [defaultCard])
+
+        // When the merchant updates the element
+        element.applyLoadResult(makeLoadResult(paymentMethodTypes: [.stripe(.card)]), confirmationChallenge: nil, configuration: configuration)
+
+        // Then Link is still the only row, selected with the same card
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
+        XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, defaultCard.stripeID)
+
+        // When an update stops showing Link
+        element.applyLoadResult(makeLoadResult(paymentMethodTypes: [.stripe(.card)], showsLink: false), confirmationChallenge: nil, configuration: configuration)
+
+        // Then the other payment methods show
+        XCTAssertFalse(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.new(paymentMethodType: .stripe(.card))])
     }
 
     func testChangeOpensTheWalletWhenConfirmingFromTheFormSheet() async throws {
@@ -237,6 +383,10 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
 
     private func paymentMethod(_ index: Int) -> ConsumerPaymentDetails {
         LinkStubs.paymentMethods()[index]
+    }
+
+    private func confirmOption(_ paymentDetails: ConsumerPaymentDetails, linkAccount: PaymentSheetLinkAccount) -> PaymentSheet.LinkConfirmOption {
+        .withPaymentDetails(brand: .link, account: linkAccount, paymentDetails: paymentDetails, confirmationExtras: nil, shippingAddress: nil)
     }
 
     /// An element whose inline verification card was shown and verified, which leaves the regular Link row at the top.
@@ -277,7 +427,7 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         return (element, linkAccount)
     }
 
-    private func makeLoadResult(paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheetLoader.LoadResult {
+    private func makeLoadResult(paymentMethodTypes: [PaymentSheet.PaymentMethodType], showsLink: Bool = true) -> PaymentSheetLoader.LoadResult {
         let stripeTypes = paymentMethodTypes.compactMap { type -> STPPaymentMethodType? in
             guard case .stripe(let stripeType) = type else { return nil }
             return stripeType
@@ -285,7 +435,7 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         return PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: stripeTypes),
             elementsSession: ._testValue(
-                paymentMethodTypes: stripeTypes.map(\.identifier) + ["link"],
+                paymentMethodTypes: stripeTypes.map(\.identifier) + (showsLink ? ["link"] : []),
                 linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
                 linkPaymentMethodBankAccountDataConsent: bankAccountDataConsent
             ),

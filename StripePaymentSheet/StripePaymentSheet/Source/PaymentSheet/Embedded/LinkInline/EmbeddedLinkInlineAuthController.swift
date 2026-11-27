@@ -14,6 +14,7 @@ protocol EmbeddedLinkInlineAuthControllerHost: AnyObject {
     /// The card should be replaced by the regular Link row.
     func linkInlineAuthDidCollapse()
     /// The customer verified their Link account. `fromCard` is false when they verified after the card closed, e.g. before paying with Link.
+    /// When it's true, the card is still showing, and the host replaces it once it knows what to show instead.
     func linkInlineAuthDidVerify(fromCard: Bool)
 }
 
@@ -402,9 +403,6 @@ final class EmbeddedLinkInlineAuthController {
         finish()
         switch result {
         case .completed:
-            if wasShowingCard {
-                host?.linkInlineAuthDidCollapse()
-            }
             host?.linkInlineAuthDidVerify(fromCard: wasShowingCard)
             resumeConfirmVerification(.verified)
         case .switchAccount:

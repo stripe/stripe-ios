@@ -88,6 +88,8 @@ class RowButton: UIView, EventHandler {
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
     let isEmbedded: Bool
+    /// Whether the row shows its radio button, checkmark, or disclosure chevron. Without it, flat rows show `accessoryView` where it would be.
+    let showsSelectionIndicator: Bool
 
     // MARK: Initializers
 
@@ -102,8 +104,10 @@ class RowButton: UIView, EventHandler {
         accessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
         isEmbedded: Bool = false,
+        showsSelectionIndicator: Bool = true,
         didTap: @escaping DidTapClosure
     ) {
+        self.showsSelectionIndicator = showsSelectionIndicator
         self.appearance = appearance
         self.type = type
         self.shouldAnimateOnPress = shouldAnimateOnPress
@@ -367,6 +371,7 @@ extension RowButton {
                        accessoryView: UIView? = nil,
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
+                       showsSelectionIndicator: Bool = true,
                        didTap: @escaping DidTapClosure) -> RowButton {
         if !isEmbedded {
             return RowButtonFloating(
@@ -380,6 +385,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         }
@@ -397,6 +403,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         case .floatingButton:
@@ -411,6 +418,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         case .flatWithCheckmark:
@@ -425,6 +433,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         case .flatWithDisclosure:
@@ -439,6 +448,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         }
@@ -610,6 +620,52 @@ extension RowButton {
         let sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
         let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: linkBrand.displayName, sublabel: sublabel, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link(brand: linkBrand)
+        return button
+    }
+
+    /// The Link row when it's the only row, showing the Link payment details it pays with, e.g. "Chase Sapphire •••• 4242", and the Link logo.
+    static func makeForLinkPaymentDetails(
+        _ paymentDetails: ConsumerPaymentDetails,
+        appearance: PaymentSheet.Appearance,
+        linkBrand: LinkBrand,
+        isEmbedded: Bool = false,
+        accessoryView: UIView? = nil,
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        let icon = paymentDetails.display?.icon
+        switch paymentDetails.details {
+        case .card(let card):
+            imageView.setImage(
+                with: icon?.type == .cardArt ? icon?.main : nil,
+                processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
+                fallbackImage: STPImageLibrary.cardBrandImage(for: card.stpBrand),
+                shimmeringImage: STPImageLibrary.cardBrandChoiceImage()
+            )
+        case .bankAccount(let bankAccount):
+            imageView.setImage(
+                with: icon?.main,
+                fallbackImage: PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode, iconStyle: appearance.iconStyle),
+                shimmeringImage: nil
+            )
+        case .generic:
+            imageView.setImage(with: icon?.main, fallbackImage: PaymentSheetImageLibrary.linkBankIcon(), shimmeringImage: nil)
+        }
+        let sublabel = PlainSublabelView(text: paymentDetails.paymentSheetSublabel, appearance: appearance, isEmbedded: isEmbedded)
+        let button = RowButton.create(
+            appearance: appearance,
+            type: .link,
+            imageView: imageView,
+            text: paymentDetails.paymentSheetLabel,
+            sublabel: sublabel,
+            accessoryView: accessoryView,
+            isEmbedded: isEmbedded,
+            // It's the only row and always selected, so the Link logo takes the place of the selection indicator.
+            showsSelectionIndicator: false,
+            didTap: didTap
+        )
+        button.accessibilityHelperView.accessibilityLabel = [String.Localized.pay_with_link(brand: linkBrand), paymentDetails.accessibilityDescription].joined(separator: ", ")
         return button
     }
 

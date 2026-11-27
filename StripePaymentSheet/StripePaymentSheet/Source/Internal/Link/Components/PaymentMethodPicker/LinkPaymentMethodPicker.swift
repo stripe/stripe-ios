@@ -212,12 +212,15 @@ final class LinkPaymentMethodPicker: UIView {
         headerView.isExpanded = collapsable ? expanded : true
 
         // Prevent double header animation
-        if headerView.isExpanded {
-            // TODO(link): revise layout margin placement and remove conditional
-            setNeedsLayout()
-            layoutIfNeeded()
-        } else {
-            headerView.layoutIfNeeded()
+        // Off screen, e.g. when the wallet expands the picker as it loads, there's nothing to animate yet. Laying out then
+        // would size the wallet to its default frame before its sheet does, which breaks constraints when the list is taller.
+        if window != nil {
+            if headerView.isExpanded {
+                setNeedsLayout()
+                layoutIfNeeded()
+            } else {
+                headerView.layoutIfNeeded()
+            }
         }
 
         guard let listViewIndex = stackView.arrangedSubviews.firstIndex(of: listView) else { return }
