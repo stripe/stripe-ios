@@ -15,20 +15,34 @@ struct PMMEViewRepresentable: UIViewRepresentable {
     let integrationType: PMMEAnalyticsHelper.IntegrationType
     let didUpdateHeight: (CGFloat) -> Void
 
+    final class Coordinator {
+        var renderedViewDataId: UUID?
+    }
+
+    public func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     public func makeUIView(context: Context) -> UIView {
         let containerView = UIView()
         createView(andAddTo: containerView)
+        context.coordinator.renderedViewDataId = viewData.id
 
         return containerView
     }
 
-    // When SwiftUI updates the view with new viewdata, we replace the old PMMEUIView with a new one
+    // When SwiftUI updates the view with new viewdata, we replace the old PMMEUIView with a new one.
+    // Other updates (e.g. our reported height changing) must not rebuild the view, otherwise the new view
+    // reports its height again and triggers another update, looping forever.
     public func updateUIView(_ uiView: UIView, context: Context) {
+        guard context.coordinator.renderedViewDataId != viewData.id else { return }
+
         // Remove old PMMEUIView
         uiView.subviews.first?.removeFromSuperview()
 
         // Replace with new one
         createView(andAddTo: uiView)
+        context.coordinator.renderedViewDataId = viewData.id
     }
 
     private func createView(andAddTo parentView: UIView) {
