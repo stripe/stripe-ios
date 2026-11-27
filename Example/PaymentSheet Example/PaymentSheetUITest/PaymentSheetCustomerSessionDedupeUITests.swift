@@ -448,9 +448,8 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.buttons["Country or region"].tap()
         app.stp_selectMenuItem("🇺🇸 United States")
 
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
-        app.stp_dismissKeyboard()
+        app.buttons["State"].tap()
+        app.stp_selectMenuItem("Alabama")
 
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
@@ -482,7 +481,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Edit"].waitForExistenceAndTap(timeout: 15))
         XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
 
-        let stateField = app.textFields["State"]
+        let stateField = app.buttons["State"]
         let countryField = app.buttons["Country or region"]
         XCTAssertTrue(stateField.waitForExistence(timeout: 3.0))
         XCTAssertTrue(countryField.waitForExistence(timeout: 3.0))

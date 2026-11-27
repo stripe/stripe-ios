@@ -39,9 +39,8 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         app.textFields["City"].tap()
         app.typeText(city)
 
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: state)
-        app.stp_dismissKeyboard()
+        app.buttons["State"].tap()
+        app.stp_selectMenuItem(state)
 
         app.textFields["ZIP"].tap()
         app.typeText(zip)
@@ -95,7 +94,7 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         XCTAssertEqual(app.textFields["Address line 1"].value as! String, line1)
         XCTAssertEqual(app.textFields["Address line 2"].value as! String, line2)
         XCTAssertEqual(app.textFields["City"].value as! String, city)
-        XCTAssertEqual(app.textFields["State"].value as! String, state)
+        XCTAssertEqual(app.buttons["State"].value as! String, state)
         XCTAssertEqual(app.textFields["ZIP"].value as! String, zip)
         if verifyAnalytics {
             let autocompleteSelectedAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_selected" }
@@ -417,9 +416,8 @@ RO
         app.typeText("510 Townsend St")
         app.textFields["City"].tap()
         app.typeText("San Francisco")
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.stp_dismissKeyboard()
+        app.buttons["State"].tap()
+        app.stp_selectMenuItem("California")
         app.textFields["ZIP"].tap()
         app.typeText("94102")
         app.buttons["Save address"].tap()
@@ -457,9 +455,8 @@ RO
         app.buttons["Address"].tap()
         app.buttons["Country or region"].waitForExistenceAndTap()
         app.stp_selectMenuItem("🇺🇸 United States")
-        app.textFields["State"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.stp_dismissKeyboard()
+        app.buttons["State"].waitForExistenceAndTap()
+        app.stp_selectMenuItem("California")
         app.buttons["Save address"].tap()
 
         // ...should not affect your billing address...
@@ -534,7 +531,7 @@ RO
         let nameField = app.textFields["Full name"]
         let line1Field = app.textFields["Address line 1"]
         let cityField = app.textFields["City"]
-        let stateField = app.textFields["State"]
+        let stateField = app.buttons["State"]
         let postalField = app.textFields["ZIP"]
         let phoneField = app.textFields["Phone number"]
 
@@ -584,8 +581,7 @@ RO
         cityField.typeText("New York")
 
         stateField.tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "New York")
-        app.stp_dismissKeyboard()
+        app.stp_selectMenuItem("New York")
 
         postalField.tap()
         let existingPostal = postalField.value as? String ?? ""

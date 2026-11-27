@@ -270,4 +270,36 @@ final class DropdownFieldElementTest: XCTestCase {
         XCTAssertFalse(element.menuButton.isEnabled)
     }
 
+    func testStateDropdownPresentsAsMenuWithPlaceholder() throws {
+        // Given a state dropdown with no default
+        let spec = AddressSpec(stateNameType: .state, subKeys: ["CA", "NY"], subLabels: ["California", "New York"])
+        let element = try XCTUnwrap(spec.makeStateElement(defaultValue: nil, stateDict: ["CA": "California", "NY": "New York"]) as? DropdownFieldElement)
+
+        // Then it's presented as a menu without the placeholder or a selected item
+        XCTAssertTrue(element.usesMenu)
+        XCTAssertTrue(element.selectedItem.isPlaceholder)
+        XCTAssertFalse(element.validationState.isValid)
+        var actions = element.menuButton.menu?.children.compactMap { $0 as? UIAction } ?? []
+        XCTAssertEqual(actions.map(\.title), ["California", "New York"])
+        XCTAssertEqual(actions.map(\.state), [.off, .off])
+        // ...and the menu button doesn't show a selection
+        XCTAssertFalse(element.menuButton.changesSelectionAsPrimaryAction)
+        XCTAssertEqual(element.menuButton.accessibilityValue, "")
+
+        // When a state is selected from the menu
+        var index: Int?
+        element.didUpdate = { index = $0 }
+        element.menuButton.sendAction(actions[1])
+
+        // Then the state is selected
+        XCTAssertEqual(index, 2)
+        XCTAssertEqual(element.selectedItem.rawData, "NY")
+        XCTAssertTrue(element.validationState.isValid)
+        // ...and the menu button shows the selection
+        actions = element.menuButton.menu?.children.compactMap { $0 as? UIAction } ?? []
+        XCTAssertEqual(actions.map(\.state), [.off, .on])
+        XCTAssertTrue(element.menuButton.changesSelectionAsPrimaryAction)
+        XCTAssertEqual(element.menuButton.accessibilityValue, "New York")
+    }
+
 }

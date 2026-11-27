@@ -359,8 +359,8 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         app.textFields["City"].tap()
         app.typeText("San Francisco")
 
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+        app.buttons["State"].tap()
+        app.stp_selectMenuItem("California")
 
         app.textFields["ZIP"].tap()
         app.typeText("94102")
