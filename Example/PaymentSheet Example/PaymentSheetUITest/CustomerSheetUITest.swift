@@ -823,6 +823,7 @@ class CustomerSheetUITest: XCTestCase {
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
+        app.stp_dismissKeyboard()
 
         app.buttons["Country or region"].tap()
         app.stp_selectMenuItem("🇺🇸 United States")
