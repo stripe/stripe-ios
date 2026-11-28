@@ -106,6 +106,13 @@ final class MLModelLoader {
                 [weak self] tmpFileURL -> Promise<MLModel> in
                 let compilePromise = Promise<MLModel>()
                 compilePromise.fulfill { [weak self] in
+                    defer {
+                        do {
+                            try FileManager.default.removeItem(at: tmpFileURL)
+                        } catch {
+                            Self.logModelLoadingError(error, stage: "remove_downloaded_model")
+                        }
+                    }
                     let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
                     let compiledURL =
                         self?.cache(
