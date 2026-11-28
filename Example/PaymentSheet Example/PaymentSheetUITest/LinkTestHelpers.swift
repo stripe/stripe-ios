@@ -96,11 +96,10 @@ extension XCTestCase {
                 cityField.typeText("South San Francisco")
             }
 
-            let stateField = app.textFields["State"]
+            let stateField = app.buttons["State"]
             if stateField.exists {
                 stateField.tap()
-                app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-                app.stp_dismissKeyboard()
+                app.stp_selectMenuItem("California")
             }
 
             let zipField = app.textFields["ZIP"]

@@ -16,11 +16,11 @@ class PaymentSheetBillingCollectionUITestCase: PaymentSheetUITestCase {
     var phoneField: XCUIElement { app.textFields["Phone number"] }
     var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
     var billingDetailsField: XCUIElement { app.staticTexts["Billing details"] }
-    var countryField: XCUIElement { app.textFields["Country or region"] }
+    var countryField: XCUIElement { app.buttons["Country or region"] }
     var line1Field: XCUIElement { app.textFields["Address line 1"] }
     var line2Field: XCUIElement { app.textFields["Address line 2"] }
     var cityField: XCUIElement { app.textFields["City"] }
-    var stateField: XCUIElement { app.textFields["State"] }
+    var stateField: XCUIElement { app.buttons["State"] }
     var zipField: XCUIElement { app.textFields["ZIP"] }
     var checkoutButton: XCUIElement { app.buttons["Present PaymentSheet"] }
     var payButton: XCUIElement { app.buttons["Pay $50.99"] }

@@ -74,7 +74,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(addressSection.selectedCountryCode, defaultAddress.address.country)
     }
 
-    func testAddressFieldsChangeWithCountry() {
+    func testAddressFieldsChangeWithCountry() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
@@ -103,9 +103,8 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(USTextFields.map { $0.configuration.label }, expectedUSFields.map { $0.label })
         XCTAssertEqual(USTextFields.map { $0.configuration.isOptional }, expectedUSFields.map { $0.isOptional })
 
-        // Hack to switch the country
-        country.pickerView(country.pickerView, didSelectRow: 1, inComponent: 0)
-        country.didFinish(country.pickerFieldView, shouldAutoAdvance: true)
+        // Emulate a user selecting the second country from the menu
+        country.menuButton.sendAction(try XCTUnwrap(country.menuButton.menu?.children[1] as? UIAction))
         let ZZTextFields = section.elements.compactMap { $0 as? TextFieldElement }
         let expectedZZFields = [
             Expected(label: "Postal code", isOptional: true),

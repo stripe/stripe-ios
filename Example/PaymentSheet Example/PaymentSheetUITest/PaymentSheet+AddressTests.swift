@@ -39,9 +39,8 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         app.textFields["City"].tap()
         app.typeText(city)
 
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: state)
-        app.stp_dismissKeyboard()
+        app.buttons["State"].tap()
+        app.stp_selectMenuItem(state)
 
         app.textFields["ZIP"].tap()
         app.typeText(zip)
@@ -95,7 +94,7 @@ class PaymentSheet_AddressTests: PaymentSheetUITestCase {
         XCTAssertEqual(app.textFields["Address line 1"].value as! String, line1)
         XCTAssertEqual(app.textFields["Address line 2"].value as! String, line2)
         XCTAssertEqual(app.textFields["City"].value as! String, city)
-        XCTAssertEqual(app.textFields["State"].value as! String, state)
+        XCTAssertEqual(app.buttons["State"].value as! String, state)
         XCTAssertEqual(app.textFields["ZIP"].value as! String, zip)
         if verifyAnalytics {
             let autocompleteSelectedAnalytic = analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_selected" }
@@ -339,9 +338,8 @@ US
         app.textFields["Full name"].typeText("Jane Doe")
 
         // Set country to Romania (not in the default autocomplete countries list)
-        app.textFields["Country or region"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇷🇴 Romania")
-        app.stp_dismissKeyboard()
+        app.buttons["Country or region"].tap()
+        app.stp_selectMenuItem("🇷🇴 Romania")
 
         // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support Romania
         XCTAssertFalse(app.buttons["autocomplete_affordance"].exists)
@@ -400,7 +398,7 @@ RO
         app.buttons["Payment method"].waitForExistenceAndTap()
 
         // ...should not show the "Billing address is same as shipping" checkbox
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.buttons["Country or region"].value as? String, "United States")
         XCTAssertEqual(app.textFields["ZIP"].value as? String, "")
         XCTAssertFalse(app.switches["Billing address is same as shipping"].exists)
         app.buttons["Close"].tap()
@@ -418,9 +416,8 @@ RO
         app.typeText("510 Townsend St")
         app.textFields["City"].tap()
         app.typeText("San Francisco")
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.stp_dismissKeyboard()
+        app.buttons["State"].tap()
+        app.stp_selectMenuItem("California")
         app.textFields["ZIP"].tap()
         app.typeText("94102")
         app.buttons["Save address"].tap()
@@ -429,28 +426,26 @@ RO
         app.buttons["Payment method"].waitForExistenceAndTap()
 
         // ...should show the "Billing address is same as shipping" checkbox selected and set the address values to shipping
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.buttons["Country or region"].value as? String, "United States")
         XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
         XCTAssertTrue(app.switches["Billing address is same as shipping"].isSelected)
 
         // Updating the shipping address country...
         app.buttons["Close"].tap()
         app.buttons["Address"].tap()
-        app.textFields["Country or region"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇾 Uruguay")
-        app.stp_dismissKeyboard()
+        app.buttons["Country or region"].waitForExistenceAndTap()
+        app.stp_selectMenuItem("🇺🇾 Uruguay")
         app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
+        XCTAssertEqual(app.buttons["Country or region"].value as? String, "Uruguay")
         XCTAssertFalse(app.textFields["Postal code"].exists)
         XCTAssertFalse(app.textFields["ZIP"].exists)
 
         // If you change the billing address, however...
-        app.textFields["Country or region"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇫🇷 France")
-        app.stp_dismissKeyboard()
+        app.buttons["Country or region"].tap()
+        app.stp_selectMenuItem("🇫🇷 France")
 
         // ...the "Billing address is same as shipping" checkbox should become deselected...
         XCTAssertFalse(app.switches["Billing address is same as shipping"].isSelected)
@@ -458,22 +453,20 @@ RO
         // ...and changing the shipping address...
         app.buttons["Close"].tap()
         app.buttons["Address"].tap()
-        app.textFields["Country or region"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.stp_dismissKeyboard()
-        app.textFields["State"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.stp_dismissKeyboard()
+        app.buttons["Country or region"].waitForExistenceAndTap()
+        app.stp_selectMenuItem("🇺🇸 United States")
+        app.buttons["State"].waitForExistenceAndTap()
+        app.stp_selectMenuItem("California")
         app.buttons["Save address"].tap()
 
         // ...should not affect your billing address...
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "France")
+        XCTAssertEqual(app.buttons["Country or region"].value as? String, "France")
         XCTAssertFalse(app.textFields["Postal code"].exists)
 
         // ...until 'Billing address is same as shipping' checkbox is selected again
         app.switches["Billing address is same as shipping"].tap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.buttons["Country or region"].value as? String, "United States")
         XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
     }
 
@@ -496,12 +489,11 @@ RO
         XCTAssertFalse(saveAddressButton.isEnabled)
 
         // Select UK for phone number country
-        app.textFields["United States +1"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇬🇧 United Kingdom +44")
-        app.stp_dismissKeyboard()
+        app.buttons["🇺🇸 United States +1"].tap()
+        app.stp_selectMenuItem("🇬🇧 United Kingdom +44")
 
-        // Ensure UK is persisted as phone country after tapping done
-        XCTAssert(app.textFields["United Kingdom +44"].exists)
+        // Ensure UK is persisted as phone country after selecting it
+        XCTAssertEqual(app.buttons["🇬🇧 United Kingdom +44"].value as? String, "United Kingdom +44")
     }
 
     // Helper method to wait for checkbox state and assert
@@ -539,7 +531,7 @@ RO
         let nameField = app.textFields["Full name"]
         let line1Field = app.textFields["Address line 1"]
         let cityField = app.textFields["City"]
-        let stateField = app.textFields["State"]
+        let stateField = app.buttons["State"]
         let postalField = app.textFields["ZIP"]
         let phoneField = app.textFields["Phone number"]
 
@@ -589,15 +581,15 @@ RO
         cityField.typeText("New York")
 
         stateField.tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "New York")
-        app.stp_dismissKeyboard()
+        app.stp_selectMenuItem("New York")
 
         postalField.tap()
         let existingPostal = postalField.value as? String ?? ""
         postalField.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: existingPostal.count))
         postalField.typeText("10001")
 
-        phoneField.tap()
+        // Tap the trailing edge so the cursor is after the existing number and the deletes below clear all of it
+        phoneField.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
         let existingPhone = phoneField.value as? String ?? ""
         phoneField.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: existingPhone.count))
         phoneField.typeText("5551234567")

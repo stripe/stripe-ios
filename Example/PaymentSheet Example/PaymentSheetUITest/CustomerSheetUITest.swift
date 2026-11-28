@@ -823,10 +823,10 @@ class CustomerSheetUITest: XCTestCase {
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
-
-        app.textFields["Country or region"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
         app.stp_dismissKeyboard()
+
+        app.buttons["Country or region"].tap()
+        app.stp_selectMenuItem("🇺🇸 United States")
 
         let zipField = app.textFields["ZIP"]
         XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
@@ -843,7 +843,7 @@ class CustomerSheetUITest: XCTestCase {
         editButton.waitForExistenceAndTap(timeout: timeout)
         editPMButton.waitForExistenceAndTap(timeout: timeout)
 
-        let countryField = app.textFields["Country or region"]
+        let countryField = app.buttons["Country or region"]
         XCTAssertTrue(countryField.waitForExistence(timeout: timeout))
         guard let expirationDate = expField.value as? String,
               let zipCode = zipField.value as? String,
@@ -876,13 +876,11 @@ class CustomerSheetUITest: XCTestCase {
         let editPMButton = app.buttons["Edit"].firstMatch
         editPMButton.tap()
 
-        app.textFields["Country or region"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.stp_dismissKeyboard()
+        app.buttons["Country or region"].tap()
+        app.stp_selectMenuItem("🇺🇸 United States")
 
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
-        app.stp_dismissKeyboard()
+        app.buttons["State"].tap()
+        app.stp_selectMenuItem("Alabama")
 
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
@@ -913,8 +911,8 @@ class CustomerSheetUITest: XCTestCase {
         editButton.waitForExistenceAndTap(timeout: timeout)
         editPMButton.waitForExistenceAndTap(timeout: timeout)
 
-        let stateField = app.textFields["State"]
-        let countryField = app.textFields["Country or region"]
+        let stateField = app.buttons["State"]
+        let countryField = app.buttons["Country or region"]
         XCTAssertTrue(stateField.waitForExistence(timeout: 3.0))
         XCTAssertTrue(countryField.waitForExistence(timeout: 3.0))
 

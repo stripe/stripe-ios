@@ -117,8 +117,6 @@ final class SectionView: UIView {
             switch element {
             case let textField as TextFieldElement:
                 return textField.isEditing
-            case let dropdown as DropdownFieldElement:
-                return dropdown.isEditing
             default:
                 return false
             }

@@ -113,6 +113,31 @@ extension XCUIApplication {
         coordinate.tap()
     }
 
+    /// Taps the item titled `title` in the currently presented menu (e.g. a country dropdown), scrolling the menu to find it if needed.
+    func stp_selectMenuItem(_ title: String, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertTrue(collectionViews.firstMatch.waitForExistence(timeout: 3), "No menu is presented", file: file, line: line)
+        // The menu's position among the collection views on screen (e.g. PaymentSheet's payment method carousel) isn't stable,
+        // so find it on every attempt. It's the tallest collection view, since it spans the list of items or the screen.
+        func menu() -> XCUIElement? {
+            return collectionViews.allElementsBoundByIndex.max { $0.frame.height < $1.frame.height }
+        }
+        // The menu opens scrolled to the selected item, so the item may be in either direction
+        for swipe in [{ (menu: XCUIElement) in menu.swipeUp() }, { (menu: XCUIElement) in menu.swipeDown() }] {
+            for _ in 0..<30 {
+                guard let menu = menu() else {
+                    break
+                }
+                let item = menu.buttons[title]
+                if item.exists && item.isHittable {
+                    item.tap()
+                    return
+                }
+                swipe(menu)
+            }
+        }
+        XCTFail("Couldn't find menu item \(title)", file: file, line: line)
+    }
+
     /// Dismisses the keyboard or picker wheel by tapping the Done button on the toolbar, or tapping outside.
     func stp_dismissKeyboard() {
         let pickerGone = NSPredicate(format: "exists == false")
