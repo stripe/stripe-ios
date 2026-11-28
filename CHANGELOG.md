@@ -51,6 +51,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ### StripeIssuing
 * [Changed] `STPIssuingCardEphemeralKeyProvider` now receives `2026-09-30.endive` as the `apiVersion` to use when creating an ephemeral key.
 
+### Identity
+* [Fixed] Fixed an issue where Identity document upload stayed in a loading state when the selected image could not be read.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
